@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #4ade80;
+            --light-green: #86efac;
+            --dark-green: #22c55e;
+            --bg-dark: #111827;
+            --card-dark: #1F2937;
+            --text-dark: #111827;
+            --text-light: #F9FAFB;
+            --text-gray: #9CA3AF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        .header {
+            padding: 2rem;
+            background: linear-gradient(90deg, var(--light-green) 0%, var(--primary-green) 50%, var(--dark-green) 100%);
+            position: relative;
+        }
+
+        .user-info {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .profile-photo {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .greeting {
+            font-size: 1.75rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .balance-section {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            width: fit-content;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .balance-label {
+            color: var(--text-dark);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .balance-amount {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .eye-icon {
+            cursor: pointer;
+            color: var(--text-dark);
+            transition: color 0.3s ease;
+        }
+
+        .eye-icon:hover {
+            color: var(--primary-green);
+        }
+
+        .profile-form {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--card-dark);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--text-gray);
+            border-radius: 0.5rem;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-group input[type="file"] {
+            padding: 0.5rem 0;
+            border: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .save-button {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 2rem auto 0;
+        }
+
+        .save-button:hover {
+            background-color: var(--dark-green);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-photo {
+                width: 120px;
+                height: 120px;
+            }
+
+            .balance-section {
+                width: 100%;
+            }
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="{% url 'dashboard' %}">
+            <div class="logo">€€€</div>
+        </a>
+        
+        <div class="user-info">
+            <div class="profile-section">
+                <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" class="profile-photo" id="preview-photo">
+                <div class="user-details">
+                    <h1 class="greeting" id="timeGreeting"></h1>
+                    <div class="balance-section">
+                        <div class="balance-label">Current Balance</div>
+                        <div class="balance-amount">
+                            <span id="balance">₹{{ current_balance }}</span>
+                            <svg class="eye-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form class="profile-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" value="{{ user.username }}">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}">
+        </div>
+
+        <div class="form-group">
+            <label for="profile_photo">Upload New Profile Photo</label>
+            <input type="file" id="profile_photo" name="profile_photo" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" name="dob" value="{{ profile.dob|date:'Y-m-d' }}">
+        </div>
+
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender">
+                <option value="MALE" {% if profile.gender == 'MALE' %}selected{% endif %}>Male</option>
+                <option value="FEMALE" {% if profile.gender == 'FEMALE' %}selected{% endif %}>Female</option>
+            </select>
+        </div>
+
+        <button type="submit" class="save-button">Save Changes</button>
+    </form>
+
+    <script>
+        // Time-based greeting
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            const username = "{{ user.username }}";
+            let greeting = "";
+
+            if (hour >= 5 && hour < 12) {
+                greeting = "Good morning";
+            } else if (hour >= 12 && hour < 17) {
+                greeting = "Good afternoon";
+            } else if (hour >= 17 && hour < 22) {
+                greeting = "Good evening";
+            } else {
+                greeting = "Good night";
+            }
+
+            document.getElementById('timeGreeting').textContent = `${greeting}, ${username}!`;
+        }
+
+        // Calculate and display balance
+        // function updateBalance() {
+        //     const income = parseFloat("{{ total_income }}") || 0;
+        //     const expense = parseFloat("{{ total_expense }}") || 0;
+        //     const balance = income - expense;
+            
+        //     document.getElementById('balance').textContent = 
+        //         balance.toLocaleString('en-US', {
+        //             style: 'currency',
+        //             currency: 'USD'
+        //         });
+        // }
+
+        const photoInput = document.getElementById('profile_photo');
+        const photoPreview = document.getElementById('preview-photo');
+
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photoPreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const eyeIcon = document.querySelector('.eye-icon');
+        const balanceElement = document.getElementById('balance');
+        let isBalanceHidden = false;
+        const currentBalance = "{{ current_balance }}";
+
+        eyeIcon.addEventListener('click', () => {
+            if (isBalanceHidden) {
+                balanceElement.textContent = '₹'+{currentBalance};
+                eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+            } else {
+                balanceElement.textContent = '••••••••';
+                eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+            }
+            isBalanceHidden = !isBalanceHidden;
+        });
+
+        const form = document.querySelector('.profile-form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Profile updated successfully!');
+        });
+
+        updateGreeting();
+       // updateBalance();
+
+        setInterval(updateGreeting, 60000); 
+    </script>
+</body>
+</html>
