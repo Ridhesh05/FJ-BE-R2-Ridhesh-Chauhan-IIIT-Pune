@@ -9,6 +9,7 @@ class Command(BaseCommand):
     help = 'Scrape blog data from the website'
 
     def handle(self, *args, **kwargs):
+        
         url = 'https://1finance.co.in/blog/'
         response = requests.get(url)
         

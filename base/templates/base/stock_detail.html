@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Investment Details</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #18191c;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+}
+
+.detail-container, .form-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #242529;
+    border-radius: 10px;
+}
+
+.detail-card {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #2a2b30;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row.highlight {
+    background-color: #3a3b40;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.label {
+    color: #888;
+    font-weight: bold;
+}
+
+.value {
+    color: #fff;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ccc;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #333;
+    background-color: #2a2b30;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #6c5dd3;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #4a4b50;
+    color: white;
+    margin-left: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="detail-container">
+        <h2>Stock Investment Details</h2>
+        <div class="detail-card">
+            <div class="detail-row">
+                <span class="label">Symbol:</span>
+                <span class="value">{{ stock.symbol }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Company:</span>
+                <span class="value">{{ stock.company_name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Number of Shares:</span>
+                <span class="value">{{ stock.shares }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Purchase Price:</span>
+                <span class="value">₹{{ stock.purchase_price|floatformat:2 }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Purchase Date:</span>
+                <span class="value">{{ stock.purchase_date }}</span>
+            </div>
+            <div class="detail-row highlight">
+                <span class="label">Total Investment Value:</span>
+                <span class="value">₹{{ investment_value|floatformat:2 }}</span>
+            </div>
+        </div>
+        <div class="action-buttons">
+            <a href="{% url 'edit_stock' stock.pk %}" class="btn-primary">Edit</a>
+            <a href="{% url 'investment' %}" class="btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

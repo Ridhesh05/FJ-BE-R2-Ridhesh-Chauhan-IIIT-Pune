@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -196,13 +197,16 @@
         
         <div class="user-info">
             <div class="profile-section">
-                <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" class="profile-photo" id="preview-photo">
+                <img src="{% if profile.profile_photo %}{{ profile.profile_photo.url }}{% else %}{% static 'images/default_profile.jpg' %}{% endif %}" 
+                     alt="Profile Photo" 
+                     class="profile-photo" 
+                     id="preview-photo">
                 <div class="user-details">
                     <h1 class="greeting" id="timeGreeting"></h1>
                     <div class="balance-section">
                         <div class="balance-label">Current Balance</div>
                         <div class="balance-amount">
-                            <span id="balance">₹{{ current_balance }}</span>
+                            <span id="balance">₹{{ current_balance|floatformat:2 }}</span>
                             <svg class="eye-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
@@ -267,21 +271,10 @@
             document.getElementById('timeGreeting').textContent = `${greeting}, ${username}!`;
         }
 
-        // Calculate and display balance
-        // function updateBalance() {
-        //     const income = parseFloat("{{ total_income }}") || 0;
-        //     const expense = parseFloat("{{ total_expense }}") || 0;
-        //     const balance = income - expense;
-            
-        //     document.getElementById('balance').textContent = 
-        //         balance.toLocaleString('en-US', {
-        //             style: 'currency',
-        //             currency: 'USD'
-        //         });
-        // }
-
+        // Handle profile photo preview and upload
         const photoInput = document.getElementById('profile_photo');
         const photoPreview = document.getElementById('preview-photo');
+        const form = document.querySelector('.profile-form');
 
         photoInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -294,14 +287,46 @@
             }
         });
 
+        // Handle form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch(window.location.href, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.photo_url) {
+                        photoPreview.src = data.photo_url;
+                    }
+                    alert('Profile updated successfully!');
+                    window.location.reload();
+                } else {
+                    throw new Error('Failed to update profile');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error updating profile. Please try again.');
+            }
+        });
+
+        // Handle balance visibility toggle
         const eyeIcon = document.querySelector('.eye-icon');
         const balanceElement = document.getElementById('balance');
         let isBalanceHidden = false;
-        const currentBalance = "{{ current_balance }}";
+        const originalBalance = balanceElement.textContent;
 
         eyeIcon.addEventListener('click', () => {
             if (isBalanceHidden) {
-                balanceElement.textContent = '₹'+{currentBalance};
+                balanceElement.textContent = originalBalance;
                 eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
             } else {
                 balanceElement.textContent = '••••••••';
@@ -310,16 +335,9 @@
             isBalanceHidden = !isBalanceHidden;
         });
 
-        const form = document.querySelector('.profile-form');
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Profile updated successfully!');
-        });
-
+        // Initialize greeting
         updateGreeting();
-       // updateBalance();
-
-        setInterval(updateGreeting, 60000); 
+        setInterval(updateGreeting, 60000);
     </script>
 </body>
 </html>

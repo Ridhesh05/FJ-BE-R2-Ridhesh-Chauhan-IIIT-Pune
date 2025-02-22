@@ -5,165 +5,278 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(to right, #7b4397, #dc2430);
+            background-color: #192338;
             font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .container {
-            display: flex;
-            width: 100vw;
+            width: 80%;
+            max-width: 1200px;
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
             overflow: hidden;
+            height: 600px;
         }
 
-        .login-container {
+        .phone-container {
+            flex: 1;
             padding: 40px;
-            width: 50%;
-            animation: fadeIn 0.5s ease;
-            margin-top: 50px; /* Move the form slightly down */
-            margin-left: auto; /* Move the form towards the right */
-            margin-right: 20px; /* Add some space on the right side */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #111827;
         }
 
-        .image-container {
-            width: 50%;
-            background-image: url('https://static.vecteezy.com/system/resources/previews/030/468/111/large_2x/investment-success-depicted-by-a-3d-finance-chart-on-a-blue-coin-backdrop-vertical-mobile-wallpaper-ai-generated-free-photo.jpg');
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
+        .phone-mockup {
+            width: 300px;
+            height: 400px;
+            background-color: #111827;
+            border-radius: 15px;
+            position: relative;
+            padding: 20px;
+            color: white;
         }
 
-        .login-heading {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-heading h1 {
-            font-size: 32px;
-            font-weight: 600;
-            color: #7b4397;
-            margin-bottom: 10px;
-        }
-
-        .login-heading p {
-            font-size: 16px;
-            color: #888;
-        }
-
-        .form-group {
+        .spending-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
         }
 
-        .form-group input {
-            width: 100%; /* Make input width 100% */
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .spending-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-size: 16px;
-            font-family: 'Poppins', sans-serif;
+        }
+
+        .spending-icon {
+            width: 20px;
+            height: 20px;
+            background-color: #ff6b6b;
+            border-radius: 4px;
+        }
+
+        .last-updated {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .balance {
+            font-size: 32px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+        .current-balance {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .date-range {
+            font-size: 14px;
+            margin: 20px 0;
+        }
+
+        .graph-container {
+            position: relative;
+            height: 200px;
+            margin-top: 30px;
+            border-bottom: 1px solid #2d3748;
+        }
+
+        .graph-line {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .graph-line path {
+            stroke: #3b82f6;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .graph-line circle {
+            fill: #3b82f6;
+        }
+
+        .y-axis {
+            position: absolute;
+            right: 0;
+            top: 0;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .x-axis {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .login-container {
+            flex: 1;
+            padding: 60px;
+            background-color: white;
+        }
+
+        .login-heading {
+            margin-bottom: 40px;
+        }
+
+        .login-heading h1 {
+            color: #1f2937;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #7b4397;
+            border-color: #45ef84;
         }
 
         .login-btn {
-            width: 100%; /* Make login button width 100% */
+            width: 100%;
             padding: 12px;
-            background-color: #7b4397;
+            background-color: #42ef82;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
-            font-family: 'Poppins', sans-serif;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s;
         }
 
         .login-btn:hover {
-            background-color: #dc2430;
+            background-color: #22c55e;
         }
 
-        .register-link {
-            display: block;
-            text-align: center;
+        .form-footer {
             margin-top: 20px;
-            color: #7b4397;
-            text-decoration: none;
-            animation: fadeIn 0.5s ease 0.3s;
-            animation-fill-mode: both;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .form-footer a {
+            color: #4ade80;
+            text-decoration: none;
         }
 
         @media (max-width: 768px) {
-            /* Adjust for smaller screens */
             .container {
                 flex-direction: column;
-                align-items: center;
+                height: auto;
             }
 
-            .image-container {
-                width: 100%;
-                height: 50vh; /* Half of the viewport height */
+            .phone-container {
+                display: none;
             }
 
             .login-container {
-                width: 80%;
-                margin-top: 20px;
-                margin-left: auto;
-                margin-right: auto;
+                padding: 40px 20px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="image-container"></div>
+        <div class="phone-container">
+            <div class="phone-mockup">
+                <div class="spending-header">
+                    <div class="spending-title">
+                        <div class="spending-icon"></div>
+                        Spending
+                    </div>
+                    <div class="last-updated">Last Updated 26 June, 2024</div>
+                </div>
+                <div class="balance">$83,465</div>
+                <div class="current-balance">Current Balance</div>
+                <div class="date-range">
+                    <div>Past 2 months</div>
+                    <div>24 May - 24 July</div>
+                </div>
+                <div class="graph-container">
+                    <svg class="graph-line" viewBox="0 0 300 200">
+                        <path d="M0,50 C50,60 100,80 150,100 S250,120 300,110" />
+                        <circle cx="0" cy="50" r="4" />
+                        <circle cx="150" cy="100" r="4" />
+                        <circle cx="300" cy="110" r="4" />
+                    </svg>
+                    <div class="y-axis">$90k</div>
+                    <div class="x-axis">
+                        <span>25 May</span>
+                        <span>26 Jul</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="login-container">
             <form method="POST" action="" class="form">
                 {% csrf_token %}
                 <div class="login-heading">
-                    <h1>Welcome!</h1>
-                    <p>Sign in to your account</p>
+                    <h1>LOGIN</h1>
+                    <p>YOUR ACCOUNT</p>
                 </div>
-                <div>
+                <div class="messages">
                     {% for message in messages %}
                         <p style="color: red;">{{ message }}</p>
                     {% endfor %}
                 </div>
                 <div class="form-group">
-                    <input type="text" name="email" placeholder="Email" />
+                    <label>Email :</label>
+                    <input type="text" name="email" placeholder="Enter your email" />
                 </div>
                 <div class="form-group">
-                    <input type="password" name="password" placeholder="Password" />
+                    <label>Password:</label>
+                    <input type="password" name="password" placeholder="Enter your password" />
                 </div>
-                <button type="submit" class="login-btn">Login</button>
-                <a href="{% url 'register' %}" class="register-link">Not a member? Register</a>
+                <button type="submit" class="login-btn">LOGIN</button>
+                <div class="form-footer">
+                    <a href="{% url 'register' %}">Don't have an account? Sign Up!</a>
+                    
+                </div>
             </form>
         </div>
     </div>

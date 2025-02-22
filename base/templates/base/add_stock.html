@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Stock</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #18191c;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+}
+.nav-links {
+            background-color: #242529;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 8px 15px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+
+        .nav-links a.active {
+            background-color: #6c5dd3;
+        }
+
+
+.detail-container, .form-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #242529;
+    border-radius: 10px;
+}
+
+.detail-card {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #2a2b30;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row.highlight {
+    background-color: #3a3b40;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.label {
+    color: #888;
+    font-weight: bold;
+}
+
+.value {
+    color: #fff;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ccc;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #333;
+    background-color: #2a2b30;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #6c5dd3;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #4a4b50;
+    color: white;
+    margin-left: 10px;
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/transaction">Transaction</a>
+        <a href="/predict">Expense Prediction</a>
+        <a href="/news">Financial News</a>
+        <a href="/investments" class="active">Investments</a>
+    </div>
+    <div class="form-container">
+        <h2>Add Stock</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Stock Symbol</label>
+                <input type="text" name="symbol" required>
+            </div>
+            <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" name="company_name" required>
+            </div>
+            <div class="form-group">
+                <label>Number of Shares</label>
+                <input type="number" name="shares" required>
+            </div>
+            <div class="form-group">
+                <label>Purchase Price per Share</label>
+                <input type="number" name="purchase_price" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label>Purchase Date</label>
+                <input type="date" name="purchase_date" required>
+            </div>
+            <button type="submit" class="btn-primary">Add Stock</button>
+            <a href="{% url 'investment' %}" class="btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>
