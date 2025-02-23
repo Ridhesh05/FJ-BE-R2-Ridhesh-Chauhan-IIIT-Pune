@@ -17,7 +17,7 @@ DEBUG = True
 SECRET_KEY = env("SECRET_KEY")
 
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+ALLOWED_HOSTS = ['13.48.104.141', 'localhost', '127.0.0.1']
 INSTALLED_APPS = [
     'jazzmin',
     'base',
