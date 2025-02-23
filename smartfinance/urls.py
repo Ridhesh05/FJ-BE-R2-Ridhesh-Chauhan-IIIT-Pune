@@ -26,7 +26,6 @@ urlpatterns = [
     path('download-expense-report/', views.download_expense_report, name='download_expense_report'),
     path('download-comparative-report/', views.download_comparative_report, name='download_comparative_report'),
     path("send_test_email/", views.send_test_email, name="send_test_email"),
-    path('social-auth/', include('social_django.urls',namespace='social')),
     path('investments/', views.investment_dashboard, name='investment'),
     path('investments/fd/add/', views.add_fixed_deposit, name='add_fd'),
     path('investments/fd/edit/<int:pk>/', views.edit_fixed_deposit, name='edit_fd'),

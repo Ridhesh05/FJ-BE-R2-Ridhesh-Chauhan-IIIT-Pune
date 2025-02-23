@@ -116,13 +116,6 @@ def log_in(request):
     return render(request, 'base/login.html')
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-from django.views.decorators.csrf import csrf_protect
-from datetime import datetime, date
-from .models import Profile
 
 @csrf_protect
 def register(request):
