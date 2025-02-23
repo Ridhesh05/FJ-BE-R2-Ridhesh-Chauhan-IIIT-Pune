@@ -116,6 +116,14 @@ def log_in(request):
     return render(request, 'base/login.html')
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.views.decorators.csrf import csrf_protect
+from datetime import datetime, date
+from .models import Profile
+
 @csrf_protect
 def register(request):
     if request.method == "POST":
@@ -123,31 +131,44 @@ def register(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         cnfpassword = request.POST.get('confirm_password')
-        dob = request.POST.get('dob')  
+        dob_str = request.POST.get('dob')
 
-        if password == cnfpassword:
-            if User.objects.filter(email=email).exists():
-                messages.info(request, 'Email already registered')
-                return redirect('register')
-            elif User.objects.filter(username=username).exists():
-                messages.info(request, 'Username already taken')
-                return redirect('register')
-            else:
-                new_user = User.objects.create_user(username=username, email=email, password=password)
-                new_user.save()
-
-                # ✅ Ensure `dob` is provided, set a default if missing
-                Profile.objects.create(user=new_user, dob=dob if dob else date.today())
-
-                user_login = authenticate(username=username, password=password)
-                if user_login is not None:
-                    login(request, user_login)
-                    return redirect('dashboard')
-        else:
-            messages.info(request, 'Password and Confirm password do not match')
+        
+        try:
+            dob = datetime.strptime(dob_str, "%Y-%m-%d").date()
+        except ValueError:
+            #messages.info(request, 'Invalid Date of Birth format')
             return redirect('register')
 
+        
+        if dob >= date.today():
+           # messages.info(request, 'Date of Birth must be in the past')
+            return redirect('register')
+
+        if password != cnfpassword:
+           # messages.info(request, 'Password and Confirm password do not match')
+            return redirect('register')
+
+        if User.objects.filter(email=email).exists():
+            #messages.info(request, 'Email already registered')
+            return redirect('register')
+
+        if User.objects.filter(username=username).exists():
+           # messages.info(request, 'Username already taken')
+            return redirect('register')
+
+        
+        new_user = User.objects.create_user(username=username, email=email, password=password)
+        Profile.objects.create(user=new_user, dob=dob)
+
+       
+        user_login = authenticate(username=username, password=password)
+        if user_login is not None:
+            login(request, user_login)
+            return redirect('dashboard')
+
     return render(request, 'base/register.html')
+
 @login_required
 def logout(request):
     auth_logout(request)
@@ -353,13 +374,13 @@ def goal_add(request):
             target_amount = Decimal(request.POST.get('target_amount'))
             saved_already = Decimal(request.POST.get('saved_already'))
             
-            # Fix date handling
+           
             desired_date_str = request.POST.get('desired_date')
             try:
-                # Convert string to date object
+
                 desired_date = datetime.strptime(desired_date_str, '%Y-%m-%d').date()
                 
-                # Validate that the date is not in the past
+            
                 if desired_date < date.today():
                     messages.error(request, 'Goal date cannot be in the past')
                     return render(request, 'base/goal_add.html')
@@ -415,10 +436,23 @@ def profile(request):
     expenses = Expense.objects.filter(user=user)
     total_income = DailyIncome.objects.filter(user=user).aggregate(Sum('income'))['income__sum'] or Decimal('0')
     total_expense = expenses.exclude(type='INCOME').aggregate(Sum('amount'))['amount__sum'] or Decimal('0')
-    current_balance = float(total_income - total_expense)  # Convert to float for JSON serialization
+    current_balance = float(total_income - total_expense)  
 
     if request.method == 'POST':
         try:
+            # Handle Gender change
+            if 'gender' in request.POST:
+                profile.gender = request.POST['gender']
+                profile.save()
+                
+                # Return the new gender in the response
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Gender updated successfully!',
+                    'gender': profile.gender,
+                    'current_balance': current_balance
+                })
+            
             # Handle profile photo
             if 'profile_photo' in request.FILES:
                 profile.profile_photo = request.FILES['profile_photo']

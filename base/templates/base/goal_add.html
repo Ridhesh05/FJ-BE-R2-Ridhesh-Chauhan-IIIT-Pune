@@ -61,8 +61,8 @@
         function validateForm(event) {
             const desiredDate = document.getElementById('desired_date').value;
             const currentDate = new Date().toISOString().split('T')[0];
-            
             if (desiredDate < currentDate) {
+                alert('The desired date cannot be in the past.');
                 event.preventDefault();
                 document.getElementById('error-message').innerText = 'The desired date cannot be in the past.';
             }
