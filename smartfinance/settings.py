@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
-DEBUG = False
+DEBUG = True
 SECRET_KEY = env("SECRET_KEY")
 
 CSRF_TRUSTED_ORIGINS = [

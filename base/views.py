@@ -3,24 +3,17 @@ from django.contrib.auth import authenticate, login, logout as auth_logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
-from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_protect
 from .models import Expense, DailyIncome,Goal,Blog,Profile,Stock,FixedDeposit,LoanCalculation
 from django.contrib.auth.models import User, auth
 from django.shortcuts import HttpResponse
 from decimal import Decimal
 import json
-from django.core.mail import send_mail
 import csv
 from django.shortcuts import get_object_or_404
-from decimal import Decimal
 from django.utils.timezone import now
 from django.core.exceptions import ObjectDoesNotExist
-from statsmodels.tsa.arima.model import ARIMA
-import numpy as np
 from django.contrib import messages
-import pandas as pd
-import matplotlib.pyplot as plt
 from datetime import date
 from django.core.exceptions import ValidationError
 from datetime import timezone
@@ -29,14 +22,11 @@ from django.db.models import F
 from django.core.paginator import Paginator
 import io
 import base64
-from sklearn.metrics import mean_squared_error, mean_absolute_error
-import matplotlib.pyplot as plt
 import os
 from django.conf import settings
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.core.mail import send_mail
-from django.conf import settings
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
@@ -95,27 +85,26 @@ def dashboard(request):
     return render(request, 'base/dashboard.html', context)
 
 
+
 def log_in(request):
     if request.method == "POST":
-        username = request.POST['email']
-        password = request.POST['password']
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '').strip()
 
-        try:
-            user_obj = User.objects.get(email=username)
-            check = authenticate(username=user_obj.username, password=password)
-        except User.DoesNotExist:
-            check = authenticate(username=username, password=password)
+        user = User.objects.filter(email=email).first()
+        if user:
+            check = authenticate(username=user.username, password=password)
+        else:
+            check = authenticate(username=email, password=password)
 
-        if check is not None:
+        if check:
             login(request, check)
             return redirect('dashboard')
         else:
-            messages.info(request, 'Credentials Invalid')
+            messages.error(request, 'Invalid email or password')
             return redirect('login')
 
     return render(request, 'base/login.html')
-
-
 
 @csrf_protect
 def register(request):
@@ -123,45 +112,40 @@ def register(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        cnfpassword = request.POST.get('confirm_password')
+        confirm_password = request.POST.get('confirm_password')
         dob_str = request.POST.get('dob')
 
-        
         try:
             dob = datetime.strptime(dob_str, "%Y-%m-%d").date()
+            if dob >= date.today():
+                messages.error(request, 'Date of Birth must be in the past')
+                return redirect('register')
         except ValueError:
-            #messages.info(request, 'Invalid Date of Birth format')
+            messages.error(request, 'Invalid Date of Birth format')
             return redirect('register')
 
-        
-        if dob >= date.today():
-           # messages.info(request, 'Date of Birth must be in the past')
-            return redirect('register')
-
-        if password != cnfpassword:
-           # messages.info(request, 'Password and Confirm password do not match')
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match')
             return redirect('register')
 
         if User.objects.filter(email=email).exists():
-            #messages.info(request, 'Email already registered')
+            messages.error(request, 'Email already registered')
             return redirect('register')
 
         if User.objects.filter(username=username).exists():
-           # messages.info(request, 'Username already taken')
+            messages.error(request, 'Username already taken')
             return redirect('register')
 
-        
+        # Create user and profile
         new_user = User.objects.create_user(username=username, email=email, password=password)
         Profile.objects.create(user=new_user, dob=dob)
 
-       
         user_login = authenticate(username=username, password=password)
-        if user_login is not None:
+        if user_login:
             login(request, user_login)
             return redirect('dashboard')
 
     return render(request, 'base/register.html')
-
 @login_required
 def logout(request):
     auth_logout(request)
