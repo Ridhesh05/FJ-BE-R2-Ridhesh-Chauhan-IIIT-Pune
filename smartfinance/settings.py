@@ -18,8 +18,10 @@ SECRET_KEY = env("SECRET_KEY")
 
 CSRF_TRUSTED_ORIGINS = [
     "https://financebuddy-4jmq.onrender.com",
-    "http://13.50.101.254:8000"
+    "http://13.50.101.254:8000",
+    "https://fj-be-r2-ridhesh-chauhan-iiit-pune.onrender.com"
 ]
+
 ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'jazzmin',
