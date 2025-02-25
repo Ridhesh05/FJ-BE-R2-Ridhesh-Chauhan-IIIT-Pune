@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import os 
 from django.urls import reverse_lazy
 import environ
+import dj_database_url
 
 # Initialize environment variables
 
@@ -68,13 +69,18 @@ WSGI_APPLICATION = 'smartfinance.wsgi.application'
 
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+    "default": dj_database_url.parse(
+        "postgresql://financebuddy_user:z7yBm794IX9SnoISYfmoexY6kcloQaDQ@dpg-cuunt9tsvqrc73dohavg-a.oregon-postgres.render.com/financebuddy"
+    )
 
+}
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
