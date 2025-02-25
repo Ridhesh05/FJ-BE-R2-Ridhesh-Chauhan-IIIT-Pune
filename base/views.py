@@ -82,7 +82,7 @@ def dashboard(request):
         'profile': profile,  
         
     }
-    return render(request, 'base/dashboard.html', context)
+    return render(request, 'base/Dashboard.html', context)
 
 
 
