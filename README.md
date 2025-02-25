@@ -26,20 +26,28 @@ First, ensure you have Python 3.11 installed. Then, create and activate a virtua
 python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 ```
+```bash
 4. Install Dependencies
 Install the required packages using pip:
 pip install -r requirements.txt
+```
+```bash
 5. Set Up Environment Variables
 Create a .env file in the root of your project directory and fill it with the following template:
 CopySECRET_KEY=your_django_secret_key
 SENDGRID_API_KEY=your_sendgrid_api_key
+```
+```bash
 6. Run Migrations
 Apply database migrations:
 python manage.py makemigrations
 python manage.py migrate
+```
+```bash
 7. Start the Application
 Run the Django development server:
-bashCopypython manage.py runserver
+python manage.py runserver
+```
 Your Django application will be available at http://127.0.0.1:8000/.
 
 
