@@ -15,28 +15,34 @@ Features
 
 Setup Instructions
 Follow these steps to set up and run the Finance-Buddy Django application:
-1. Clone the Repository
-bashCopygit clone https://github.com/yourusername/finance-buddy.git
+# 1. Clone the Repository
+``` bash
+git clone https://github.com/yourusername/finance-buddy.git
 cd finance-buddy
-2. Create a Virtual Environment
+```
+``` bash
+3. Create a Virtual Environment
 First, ensure you have Python 3.11 installed. Then, create and activate a virtual environment:
-bashCopypython -m venv venv
+python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-3. Install Dependencies
+```
+4. Install Dependencies
 Install the required packages using pip:
-bashCopypip install -r requirements.txt
-4. Set Up Environment Variables
+pip install -r requirements.txt
+5. Set Up Environment Variables
 Create a .env file in the root of your project directory and fill it with the following template:
 CopySECRET_KEY=your_django_secret_key
 SENDGRID_API_KEY=your_sendgrid_api_key
-5. Run Migrations
+6. Run Migrations
 Apply database migrations:
-bashCopypython manage.py makemigrations
+python manage.py makemigrations
 python manage.py migrate
-6. Start the Application
+7. Start the Application
 Run the Django development server:
 bashCopypython manage.py runserver
 Your Django application will be available at http://127.0.0.1:8000/.
+
+
 Technologies Used
 
 Backend: Django
