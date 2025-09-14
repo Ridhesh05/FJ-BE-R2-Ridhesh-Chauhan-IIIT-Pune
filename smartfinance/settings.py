@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'smartfinance.wsgi.application'
 # }
 DATABASES = {
     "default": dj_database_url.parse(
-        "postgresql://financebuddy_user:z7yBm794IX9SnoISYfmoexY6kcloQaDQ@dpg-cuunt9tsvqrc73dohavg-a.oregon-postgres.render.com/financebuddy"
+        "postgresql://finance_umiz_user:ZgwWYJkz6XVao43ngIj4jPyIdVEjoD0v@dpg-d33bmvnfte5s73apar90-a/finance_umiz"
     )
 
 }
